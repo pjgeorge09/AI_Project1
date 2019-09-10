@@ -1,10 +1,32 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+'''A method to normalize sets of data to values [0-1]'''
+def normalizeData (aPanda):
+    maxH = aPanda['Height'].max()
+    maxW = aPanda['Weight'].max()
+    aPanda['Height'] = aPanda['Height'].divide(maxH)
+    aPanda['Weight'] = aPanda['Weight'].divide(maxW)
+    return aPanda;
+
+'''A method to plot the graphs based on inputs'''
+def graphIt (femaleData, maleData):
+    plt.scatter(femaleData['Weight'], femaleData['Height'], color='r', marker='.')
+    plt.scatter(maleData['Weight'], maleData['Height'], color='b', marker='.')
+    plt.show()    
+    return;
+
+'''Create Data Objects'''
 dfA = pd.read_csv('groupA.txt', header=None, names = ['Height', 'Weight', 'Gender'])
 dfB = pd.read_csv('groupB.txt', header=None, names = ['Height', 'Weight', 'Gender'])
 dfC = pd.read_csv('groupC.txt', header=None, names = ['Height', 'Weight', 'Gender'])
 print(dfA)
+
+
+'''Normalize Data'''
+dfA = normalizeData(dfA)
+dfB = normalizeData(dfB)
+dfC = normalizeData(dfC)
 
 
 '''Splits the original bulk data into two'''
@@ -16,46 +38,14 @@ femalesB = dfB[dfB.Gender == 1]
 malesC = dfC[dfC.Gender == 0]
 femalesC = dfC[dfC.Gender == 1]
 
-'''Need to NORMALIZE data!'''
-'''For normalizing maybe 
-    Data is already normalized in plot?'''
-maxAH = dfA['Height'].max()
-maxAW = dfA['Weight'].max()
-'''--------'''
-maxBH = dfB['Height'].max()
-maxBW = dfB['Weight'].max()
-'''--------'''
-maxCH = dfC['Height'].max()
-maxCW = dfC['Weight'].max()
-'''Normalize method below
-males ['Height'] = males['Height'].divide(maxH)
-'''
-
-#femalesA['Height'].divide(maxAH)
-'''How to manipulate DF values now'''
-
 
 '''Plotting the Data A'''
-plt.scatter(femalesA['Weight'], femalesA['Height'], color='r', marker='.')
-plt.scatter(malesA['Weight'], malesA['Height'], color='b', marker='.')
-plt.show()
+graphIt(femalesA, malesA)
 '''Plotting the Data B'''
-plt.scatter(femalesB['Weight'], femalesB['Height'], color='r', marker='.')
-plt.scatter(malesB['Weight'], malesB['Height'], color='b', marker='.')
-plt.show()
+graphIt(femalesB, malesB)
 '''Plotting the Data C'''
-plt.scatter(femalesC['Weight'], femalesC['Height'], color='r', marker='.')
-plt.scatter(malesC['Weight'], malesC['Height'], color='b', marker='.')
-plt.show()
+graphIt(femalesC, malesC)
 
-print(malesC['Height'].max())
-'''Need to add groupB/C.txt data'''
 
-def normalizeData (aPanda):
-    maxH = aPanda['Height'].max()
-    maxW = aPanda['Weight'].max()
-    aPanda['Height'] = aPanda['Height'].divide(maxH)
-    aPanda['Weight'] = aPanda['Weight'].divide(maxW)
-    return aPanda;
     
 
