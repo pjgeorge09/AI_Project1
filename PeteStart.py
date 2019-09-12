@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 '''A method to normalize sets of data to values [0-1]'''
@@ -9,11 +10,18 @@ def normalizeData (aPanda):
     aPanda['Weight'] = aPanda['Weight'].divide(maxW)
     return aPanda;
 
+'''A method to be used in graphIt to generate a best-fit line by Hebbian learning'''
+def hebb (data, data2, plot):
+    bias = 1
+    
+    return;
+
 '''A method to plot the graphs based on inputs'''
 def graphIt (femaleData, maleData):
     plt.scatter(femaleData['Weight'], femaleData['Height'], color='r', marker='.')
     plt.scatter(maleData['Weight'], maleData['Height'], color='b', marker='.')
-    plt.show()    
+    '''Find the line here, nested, using Hebbian'''
+    
     return;
 
 '''Create Data Objects'''
@@ -41,10 +49,25 @@ femalesC = dfC[dfC.Gender == 1]
 
 '''Plotting the Data A'''
 graphIt(femalesA, malesA)
+'''Self created line for A'''
+x = np.linspace(0.75,1,100)
+y = (-0.96)*x+1.7
+plt.plot(x, y,'-g')
+plt.show()    
 '''Plotting the Data B'''
 graphIt(femalesB, malesB)
+'''Self created line for A'''
+x = np.linspace(0.75,1,100)
+y = (-1)*x+1.825
+plt.plot(x, y,'-g')
+plt.show()    
 '''Plotting the Data C'''
 graphIt(femalesC, malesC)
+'''Self created line for A'''
+x = np.linspace(0.85,1,100)
+y = (-1.2)*x+2
+plt.plot(x, y,'-g')
+plt.show()    
 
 
     
