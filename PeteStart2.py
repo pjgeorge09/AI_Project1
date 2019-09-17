@@ -1,3 +1,8 @@
+###############################################################################
+### Project Name : AI Project 1                                             ###
+### Class        : CMSC409 Fall 2019                                        ###
+### Team         : Peter George , Daniel Webster , Joseph Longo             ###
+###############################################################################
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,12 +16,6 @@ def normalizeData (aPanda):
     aPanda['Height'] = aPanda['Height'].divide(maxH)
     aPanda['Weight'] = aPanda['Weight'].divide(maxW)
     return aPanda;
-
-'''A method to be used in graphIt to generate a best-fit line by Hebbian learning'''
-def hebb (data, data2, plot):
-    bias = 1
-    
-    return;
 
 '''A method to plot the graphs based on inputs'''
 def graphIt (femaleData, maleData):
