@@ -1,3 +1,8 @@
+###############################################################################
+### Project Name : AI Project 1                                             ###
+### Class        : CMSC409 Fall 2019                                        ###
+### Team         : Peter George , Daniel Webster , Joseph Longo             ###
+###############################################################################
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,19 +15,13 @@ def normalizeData (aPanda):
     aPanda['Weight'] = aPanda['Weight'].divide(maxW)
     return aPanda;
 
-'''A method to be used in graphIt to generate a best-fit line by Hebbian learning'''
-def hebb (data, data2, plot):
-    bias = 1
-    
-    return;
-
 '''A method to plot the graphs based on inputs'''
 def graphIt (femaleData, maleData):
     plt.scatter(femaleData['Weight'], femaleData['Height'], color='r', marker='.')
     plt.scatter(maleData['Weight'], maleData['Height'], color='b', marker='.')
     '''Find the line here, nested, using Hebbian'''
-    
     return;
+
 
 '''Create Data Objects'''
 dfA = pd.read_csv('groupA.txt', header=None, names = ['Height', 'Weight', 'Gender'])
@@ -38,7 +37,8 @@ dfC = normalizeData(dfC)
 
 
 '''Splits the original bulk data into two'''
-'''https://stackoverflow.com/questions/27900733/python-pandas-separate-a-dataframe-based-on-a-column-value'''
+'''https://stackoverflow.com/questions/27900733/python-pandas-separate-a-dataf
+rame-based-on-a-column-value'''
 malesA = dfA[dfA.Gender == 0]
 femalesA = dfA[dfA.Gender == 1]
 malesB = dfB[dfB.Gender == 0]
