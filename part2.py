@@ -34,10 +34,12 @@ def initArray(anArray):
 # Section 7, slide 7 Hard Activation Net Value
 def netCalc(array1, array2):
     sum = 0
-    for i in range (0,2):
+    for i in range (0,2):                           #Dot Product & round
         sum = sum + array1[i]*array2[i]
-        sum = round(sum,6)
+    sum += array1[2]                         #Adding in the bias
     # If this value is greater than zero , fire neuron otherwise don't
+    
+    sum = round(sum,6)
     return sum
 
 def SAF(orig, train, p):
@@ -91,7 +93,6 @@ def SAF(orig, train, p):
     
 
 
-
 '''originalArray = initRandom array, trainingSet = dataset using, p = amount of dataset using (ex, 0.75 = 75%'''
 def HAF(originalArray, trainingSet, p):
     fire = 0 #Did the neuron fire
@@ -99,10 +100,9 @@ def HAF(originalArray, trainingSet, p):
     r = r/2 #Doing one male one female each time in for loop
     r = round(r * p) #Make sure it's an int
     u = 2000 # To offset for female sampling
-    netCompare = 0
     # It will always do this exactly one time for a male, and one time for a female
     
-    for bigNum in range (0,10):
+    for bigNum in range (0,50):
         print(bigNum)
         print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
         for x in range(0,r): #statically trying different values for data update
@@ -116,51 +116,40 @@ def HAF(originalArray, trainingSet, p):
                 pArray.append(j)
             # net is  the net from slides, where it's >= -1  (midslide pp07)
             net = netCalc(originalArray, pArray) #USE PP4 SLIDE 3,
-            thresh = -1* originalArray[2]
             #Activation function
-            if (net > thresh):
-                fire = 0
-            elif (net <= thresh ):
+            if (net > 0):
                 fire = 1
+            elif (net <= 0 ):
+                fire = -1
+            delta = pArray[2] - fire 
             #Question for TA : our D is the 3rd column, our O is the activation value?
-            thing = (pArray[2] - fire) #This number can either be 1 or zero now    
-            deltaW = thing*alpha #using a static alpha right now
-            if(deltaW != 0 ):
-                #print("UPDATING UPDATING UPDATING UPDATING UPDATING UPDATING UPDATING ")
-                # multiply deltaW by pArray
-                pArray = [deltaW * i for i in pArray]
-                for s in range (0,3):
-                    originalArray[s] = originalArray[s] + pArray[s]
-                    originalArray[s] = round(originalArray[s],6)
+            for s in range (0,2):
+                originalArray[s] += delta*alpha*pArray[s]
+            originalArray[2] += delta*alpha
             #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
+            
+            
             '''For 1 female       NOTE BELOW THIS'''
             fire = 0
-            pattern = trainingSet.iloc[x+u] #should be one row of the passed data set on FEMALE side
+            pattern2 = trainingSet.iloc[x+u] #should be one row of the passed data set on FEMALE side
             pArray2 = []
-            for j in pattern:
+            for j in pattern2:
                 pArray2.append(j)
-            net = netCalc(originalArray, pArray2)
-            thresh = -1* originalArray[2]
+            net2 = netCalc(originalArray, pArray2)
             #Activation function
-            if (net > thresh):
-                fire = 0
-            elif (net <= thresh ):
+            if (net2 > 0):
                 fire = 1
-            #Question for TA : our D is the 3rd column, our O is the activation value?
-            thing = (pArray2[2] - fire) #This number can either be 1 or zero now    
-            deltaW = thing*alpha #using a static alpha right now
-            if(deltaW != 0 ):
-                #print("UPDATING UPDATING UPDATING UPDATING UPDATING UPDATING UPDATING ")
-                # multiply deltaW by pArray
-                print(pArray2)
-                print("deltaW + " + str(deltaW))
-                pArray2 = [deltaW * i for i in pArray2]
-                print(pArray2)
-                for s in range (0,3):
-                    originalArray[s] = originalArray[s] + pArray2[s]
-                    originalArray[s] = round(originalArray[s],6)
+            elif (net2 <= 0 ):
+                fire = -1
+                
+            delta = pArray2[2] - fire
+
+            for s in range (0,2):
+                originalArray[s] += delta*alpha*pArray2[s]
+            originalArray[2] += delta*alpha
             #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
-    
+            
+            
     x = np.linspace(0,1,100)
     b = originalArray[2]/originalArray[1]*-1
     slope = originalArray[0]/originalArray[1]
@@ -198,7 +187,7 @@ malesC = dfC[dfC.Gender == 0]
 femalesC = dfC[dfC.Gender == 1]
 
 # Alpha should be dynamic
-alpha = 0.2
+alpha = 0.1
 ni = 5000 #stopping criteria
 # Gain should be dynamic 
 gain = 0.008
@@ -211,8 +200,8 @@ ourArray = initArray(ourArray) #quick method to initialize array with 3 values b
 
 # New Array = Do alpha times x (which is our array of weights) times (d - o) from activation function
 # weights = old weights plus the newArray
-#HAF(ourArray, dfA, 0.75)
-SAF(ourArray,dfA,0.75)
+HAF(ourArray, dfC, 0.75)
+#SAF(ourArray,dfA,0.75)
 
 
 '''
