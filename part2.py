@@ -93,21 +93,22 @@ def SAF(orig, train, p):
     
 
 
-'''originalArray = initRandom array, trainingSet = dataset using, p = amount of dataset using (ex, 0.75 = 75%'''
+'''                 Hard Activation Function Method                         '''
+''' @input originalArray = is the starting weight array, initialized elsewhere
+    @input trainingSet = is the set of data, dfA,dfB,dfC for us in our work
+    @input p = is the percent of the data you want to use as training data'''
 def HAF(originalArray, trainingSet, p):
-    fire = 0 #Did the neuron fire
+    fire = 0 #initialize for reset/global use in function, "did neuron fire"
     r,c = trainingSet.shape
     r = r/2 #Doing one male one female each time in for loop
     r = round(r * p) #Make sure it's an int
     u = 2000 # To offset for female sampling
     # It will always do this exactly one time for a male, and one time for a female
-    
-    for bigNum in range (0,50):
-        print(bigNum)
-        print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
+    for bigNum in range (0,100):
+        #print(bigNum)
+        #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
         for x in range(0,r): #statically trying different values for data update
             fire = 0
-            #print(x)
             '''For 1 male'''
             pattern = trainingSet.iloc[x] #should be one row of the passed data set
             #this block just makes the row into an array
@@ -120,14 +121,11 @@ def HAF(originalArray, trainingSet, p):
             if (net > 0):
                 fire = 1
             elif (net <= 0 ):
-                fire = -1
+                fire = 0
             delta = pArray[2] - fire 
-            #Question for TA : our D is the 3rd column, our O is the activation value?
             for s in range (0,2):
                 originalArray[s] += delta*alpha*pArray[s]
             originalArray[2] += delta*alpha
-            #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
-            
             
             '''For 1 female       NOTE BELOW THIS'''
             fire = 0
@@ -140,30 +138,20 @@ def HAF(originalArray, trainingSet, p):
             if (net2 > 0):
                 fire = 1
             elif (net2 <= 0 ):
-                fire = -1
-                
+                fire = 0             
             delta = pArray2[2] - fire
-
             for s in range (0,2):
                 originalArray[s] += delta*alpha*pArray2[s]
-            originalArray[2] += delta*alpha
-            #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
-            
-            
+            originalArray[2] += delta*alpha            
+    
+    # Plotting the line        
     x = np.linspace(0,1,100)
-    b = originalArray[2]/originalArray[1]*-1
-    slope = originalArray[0]/originalArray[1]
+    b = -originalArray[2]/originalArray[1]
+    slope = -originalArray[0]/originalArray[1]
     y = slope*x+b
     graphIt(femalesA, malesA)
     plt.plot(x,y,'-g')
     plt.show()
-        
-    '''
-    x = np.linspace(0.85,1,100)
-    y = (-1.2)*x+2
-    plt.plot(x, y,'-g')
-    plt.show()  
-    '''
     return
 
     
@@ -187,10 +175,10 @@ malesC = dfC[dfC.Gender == 0]
 femalesC = dfC[dfC.Gender == 1]
 
 # Alpha should be dynamic
-alpha = 0.1
+alpha = 0.8
 ni = 5000 #stopping criteria
 # Gain should be dynamic 
-gain = 0.008
+gain = 10
 ourArray = []
 ourArray = initArray(ourArray) #quick method to initialize array with 3 values between (-0.5,0.5)
 
@@ -200,7 +188,10 @@ ourArray = initArray(ourArray) #quick method to initialize array with 3 values b
 
 # New Array = Do alpha times x (which is our array of weights) times (d - o) from activation function
 # weights = old weights plus the newArray
-HAF(ourArray, dfC, 0.75)
+weightsHAFA = HAF(ourArray, dfA, 0.75)
+weightsHAFA = HAF(ourArray, dfB, 0.75)
+weightsHAFA = HAF(ourArray, dfC, 0.75)
+
 #SAF(ourArray,dfA,0.75)
 
 
