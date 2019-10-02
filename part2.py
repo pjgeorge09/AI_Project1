@@ -53,11 +53,11 @@ def SAF(originalArray, trainingSet, p, epsilon, alpha, gain):
     # It will always do this exactly one time for a male, and one time for a female
     TE = 2000
     while(TE > epsilon):
-        for bigNum in range (0,100):
+        for bigNum in range (0,500):
             TE = 0
             print(bigNum)
             #print(str(originalArray[0]) + "X * " + str(originalArray[1]) + "Y + " + str(originalArray[2]) + " > 0")  
-            for x in range(0,u-1): #statically trying different values for data update
+            for x in range(0,1999): #statically trying different values for data update
                 fire = 0
                 '''For 1 male'''
                 #ex = random.randrange(0,1999)
@@ -67,8 +67,9 @@ def SAF(originalArray, trainingSet, p, epsilon, alpha, gain):
                 for j in pattern:
                     pArray.append(j)
                 # net is  the net from slides, where it's >= -1  (midslide pp07)
+                net = netCalc(originalArray,pArray)
                 try:
-                    out = 1/(1+(math.exp(-1*gain*netCalc(originalArray,pArray))))
+                    out = 1/(1+(math.exp(-1*gain*net)))
                 except OverflowError:
                     out = pArray[2]
                 fire = out
@@ -84,8 +85,9 @@ def SAF(originalArray, trainingSet, p, epsilon, alpha, gain):
                 pArray2 = []
                 for j in pattern2:
                     pArray2.append(j)
+                net2 = netCalc(originalArray,pArray2)
                 try:
-                    out = 1/(1+(math.exp(-gain*netCalc(originalArray,pArray2))))
+                    out = 1/(1+(math.exp(-gain*net2)))
                 except OverflowError:
                     out = pArray2[2]
                 fire = out
@@ -95,9 +97,9 @@ def SAF(originalArray, trainingSet, p, epsilon, alpha, gain):
                 originalArray[2] += delta*alpha            
                 TE += delta**2
             print(TE)
-                
+            print(str(TE) + " < " + str(epsilon))   
             if(TE<epsilon or bigNum == 99):
-                break
+                return originalArray
     return originalArray
 
 
@@ -116,6 +118,7 @@ def HAF(originalArray, trainingSet, p, epsilon, alpha):
     # It will always do this exactly one time for a male, and one time for a female
     TE = 2000
     while(TE > epsilon):
+        TE = 0
         for bigNum in range (0,ni):
             TE = 0
             print(bigNum)
@@ -161,7 +164,7 @@ def HAF(originalArray, trainingSet, p, epsilon, alpha):
                 TE += abs(delta)
             print(TE)
             if(TE<epsilon or bigNum == ni):
-                break
+                   return originalArray
     return originalArray
 
 '''Can be modified to plot only the non-training data just add a p parameter 1-p'''
@@ -204,21 +207,21 @@ ourArray = []
 ourArray = initArray(ourArray) #quick method to initialize array with 3 values between (-0.5,0.5)
 
 '''Hard Activation Function'''
-'''
-weightsHAFA = HAF(ourArray, dfA, 0.75, epsilonA, 0.05)
+
+'''weightsHAFA = HAF(ourArray, dfA, 1, epsilonA, 0.5)
 plotIt(dfA,weightsHAFA)
-weightsHAFB = HAF(ourArray, dfB, 0.75, epsilonB, 0.05)
+weightsHAFB = HAF(ourArray, dfB, 1, epsilonB, 0.5)
 plotIt(dfB,weightsHAFB)
-weightsHAFC = HAF(ourArray, dfC, 0.75, epsilonC, 0.001)
-plotIt(dfC,weightsHAFC)
-'''
+weightsHAFC = HAF(ourArray, dfC, 1, epsilonC, 0.0001)
+plotIt(dfC,weightsHAFC)'''
+
 #SAF(ourArray,dfA,0.75)
-weightsSAFC = SAF(initArray(ourArray), dfC, 1, 10, epsilonC, 0.05)
+weightsSAFC = SAF(initArray(ourArray), dfC, 1, 0.5, epsilonC, 0.8)
 plotIt(dfC, weightsSAFC)
 
-weightsSAFB = SAF(ourArray, dfB, 1, 10, epsilonB, 0.05)
+weightsSAFB = SAF(ourArray, dfB, 1, 1, epsilonB, 0.8)
 plotIt(dfB, weightsSAFB)
-weightsSAFA = SAF(ourArray, dfA, 1, 10, epsilonA, 0.05)
+weightsSAFA = SAF(ourArray, dfA, 1, 1, epsilonA, 0.8)
 plotIt(dfA, weightsSAFA)
 
 
