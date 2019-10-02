@@ -253,13 +253,10 @@ weightsSAFC = SAF(dfC, st25, epsilonC, 0.5, 5)
 plotIt(dfC, dfCo, weightsSAFC)
 
 def calculate_inequal(num,ww):
-   if (num['Height']*ww[0]+ww[1]*num['Weight']-ww[2])>0:
-#       print(num['Height']*ww[2]+ww[1]*num['Weight']-ww[0])
-       return 0
-   else:
-#       print(ww[0],"",ww[1],"",ww[2])
-#       print(num['Height']*ww[2]+ww[1]*num['Weight']-ww[0])
+   if (num['Height']*ww[0]+ww[1]*num['Weight']+ww[2])>0:
        return 1
+   else:
+       return 0
 '''Testing Function
     @input:dataframe,weights from weightsSAF or HAF
     @output:error for testing with actual and plots for testing'''
@@ -277,26 +274,51 @@ def testingFunction(df_train,weights,percnt):
         rlist.append(df_train[l])
     
     df_test=pd.DataFrame(rlist)
-    print(weights)
-    print(df_test)
+#    print(df_test)
     df_testPerceptrn=df_test.apply(calculate_inequal,axis=1,ww=(weights))
-    print(df_testPerceptrn)
-    print(dfAn)
+#    print(df_testPerceptrn)
+    actual_matrix=df_test['Gender']
+    
+    predicted_matrix=df_testPerceptrn
+    
+    confusion_matrix=pd.crosstab(actual_matrix,predicted_matrix)
+    
+    df = normalizeData(df_test)
+    
+    plotIt(df_test,df,weights)
+    
+    print(confusion_matrix)
+
     return
 
 #print(males)
 #print(females)
-testingFunction(dfAn,weightsSAFA,0.75)
+#testingFunction(dfA,weightsSAFA,0.75)
 
 
 '''Hard Activation Function at 75% testing'''
-htst25=0.75
-
+print("\nHard Activation Function at 75% testing:\n")
+htst75=0.75
+testingFunction(dfA,weightsHAFA,htst75)
+testingFunction(dfB,weightsHAFB,htst75)
+testingFunction(dfC,weightsHAFC,htst75)
+        
 '''Soft Activation Function at 75% testing'''
-stst25=0.75
-
+print("\nSoft Activation Function at 75% testing:\n")
+stst75=0.75
+testingFunction(dfA,weightsSAFA,stst75)
+testingFunction(dfB,weightsSAFB,stst75)
+testingFunction(dfC,weightsSAFC,stst75)
 '''Hard Activation Function at 25% testing'''
+print("\nHard Activation Function at 25% testing:\n")
 htst25=0.25
+testingFunction(dfA,weightsHAFA,htst25)
+testingFunction(dfB,weightsHAFB,htst25)
+testingFunction(dfC,weightsHAFC,htst25)
 
 '''Soft Activation Function at 25% testing'''
+print("\n\nSoft Activation Function at 25% testing:\n")
 stst25=0.25
+testingFunction(dfA,weightsSAFA,stst25)
+testingFunction(dfB,weightsSAFB,stst25)
+testingFunction(dfC,weightsSAFC,stst25)
