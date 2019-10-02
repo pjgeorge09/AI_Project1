@@ -102,7 +102,9 @@ def SAF(trainingSet, p, epsilon, alpha, gain):
                 TE += delta**2
             TE = round(TE,6)
             if(TE<epsilon or bigNum == 99):
+                print(TE)
                 return originalArray
+    print(TE)
     return originalArray
 
 
@@ -169,7 +171,9 @@ def HAF(trainingSet, p, epsilon, alpha):
                 originalArray[2] += delta*alpha            
                 TE += abs(delta)
             if(TE<epsilon or bigNum == ni):
+                   print(TE)
                    return originalArray
+    print(TE)
     return originalArray
 
 '''Can be modified to plot only the non-training data just add a p parameter 1-p'''
@@ -187,21 +191,26 @@ def plotIt(theDF, theDFo, theEQ):
     return
     
 '''Create Data Objects'''
-dfAo = pd.read_csv('groupA.txt', header=None, names = ['Height', 'Weight', 'Gender'])
-dfBo = pd.read_csv('groupB.txt', header=None, names = ['Height', 'Weight', 'Gender'])
-dfCo = pd.read_csv('groupC.txt', header=None, names = ['Height', 'Weight', 'Gender'])
+dfAn = pd.read_csv('groupA.txt', header=None, names = ['Height', 'Weight', 'Gender'])
+dfBn = pd.read_csv('groupB.txt', header=None, names = ['Height', 'Weight', 'Gender'])
+dfCn = pd.read_csv('groupC.txt', header=None, names = ['Height', 'Weight', 'Gender'])
 '''Normalize Data'''
-dfAo = normalizeData(dfAo)
-dfBo = normalizeData(dfBo)
-dfCo = normalizeData(dfCo)
+dfAo = normalizeData(dfAn)
+dfBo = normalizeData(dfBn)
+dfCo = normalizeData(dfCn)
+
+dfAn = dfAn.to_dict('index')
+dfBn = dfBn.to_dict('index')
+dfCn = dfCn.to_dict('index')
+
 dfA = dfAo.to_dict('index')
 dfB = dfBo.to_dict('index')
 dfC = dfCo.to_dict('index')
 
-print(dfA[0])
-thing = dfA[0]
-for _ in thing:
-    print(thing[_])
+#print(dfA[0])
+#thing = dfA[0]
+#for _ in thing:
+#    print(thing[_])
 '''Define Epsilons'''
 epsilonA = 0.00001
 epsilonB = 100
@@ -243,3 +252,51 @@ plotIt(dfB, dfBo, weightsSAFB)
 weightsSAFC = SAF(dfC, st25, epsilonC, 0.5, 5)
 plotIt(dfC, dfCo, weightsSAFC)
 
+def calculate_inequal(num,ww):
+   if (num['Height']*ww[0]+ww[1]*num['Weight']-ww[2])>0:
+#       print(num['Height']*ww[2]+ww[1]*num['Weight']-ww[0])
+       return 0
+   else:
+#       print(ww[0],"",ww[1],"",ww[2])
+#       print(num['Height']*ww[2]+ww[1]*num['Weight']-ww[0])
+       return 1
+'''Testing Function
+    @input:dataframe,weights from weightsSAF or HAF
+    @output:error for testing with actual and plots for testing'''
+
+def testingFunction(df_train,weights,percnt):
+    r=4000
+    r=r/2
+    r=round(r*percnt)
+    nw=round(len(df_train)/2)
+    rlist=[]
+    for i in range(r,nw):
+        rlist.append(df_train[i])
+    
+    for l in range(nw+r,len(df_train)):
+        rlist.append(df_train[l])
+    
+    df_test=pd.DataFrame(rlist)
+    print(weights)
+    print(df_test)
+    df_testPerceptrn=df_test.apply(calculate_inequal,axis=1,ww=(weights))
+    print(df_testPerceptrn)
+    print(dfAn)
+    return
+
+#print(males)
+#print(females)
+testingFunction(dfAn,weightsSAFA,0.75)
+
+
+'''Hard Activation Function at 75% testing'''
+htst25=0.75
+
+'''Soft Activation Function at 75% testing'''
+stst25=0.75
+
+'''Hard Activation Function at 25% testing'''
+htst25=0.25
+
+'''Soft Activation Function at 25% testing'''
+stst25=0.25
