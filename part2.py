@@ -61,7 +61,14 @@ def netCalc(array1, array2):
     # If this value is greater than zero , fire neuron otherwise don't (for HAF)
     return sum
 
-
+'''Soft Activation Function'''
+'''A method to calculate a best fit line based on criteria and updates, with no hard definition (nonbinary)
+   @input trainingSet : the set of data we are learning on
+   @p : the percent of the data we want to train on in range (0,1) should not be zero
+   @epsilon : A stopping criteria that determines if line is good enough compared to total error
+   @alpha : learning rate, set to be static and defined elsewhere, independent for each trial
+   @gain : the gaining rate to be used in the equation
+   RETURN : returns an array in the form of [A B C] for the formula Ax + By + C < 0 '''
 def SAF(trainingSet, p, epsilon, alpha, gain):
     originalArray = initArray()
     r = len(trainingSet)
@@ -110,9 +117,11 @@ def SAF(trainingSet, p, epsilon, alpha, gain):
 
 
 '''                 Hard Activation Function Method                         '''
-''' @input originalArray = is the starting weight array, initialized elsewhere
-    @input trainingSet = is the set of data, dfA,dfB,dfC for us in our work
-    @input p = is the percent of the data you want to use as training data'''
+''' A method to calculate a best fit line based on criteria and updates, with a hard definition (binary)
+    @input trainingSet : is the set of data, dfA,dfB,dfC for us in our work
+    @input p : is the percent of the data you want to use as training data
+    @epsilon : A stopping criteria that determines if line is good enough compared to total error
+    @alpha : learning rate, set to be static and defined elsewhere, independent for each trial '''
 def HAF(trainingSet, p, epsilon, alpha):
     originalArray = initArray()
     fire = 0 #initialize for reset/global use in function, "did neuron fire"
