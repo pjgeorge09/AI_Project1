@@ -176,7 +176,18 @@ def HAF(trainingSet, p, epsilon, alpha):
                    return originalArray
     return originalArray
 
+def partial(aDF, aPercent):
+    combinedDF = pd.DataFrame(columns=['Height', 'Weight', 'Gender'])
+    r,c = aDF.shape
+    length = r
+    for _ in range(0, round((length*aPercent)/2)):
+        combinedDF = combinedDF.append(aDF.iloc[_])
+    for _ in range(2000, 2000+round((length*aPercent)/2)):
+        combinedDF = combinedDF.append(aDF.iloc[_])
     
+    
+    return combinedDF
+
 '''Create Data Objects'''
 dfAn = pd.read_csv('groupA.txt', header=None, names = ['Height', 'Weight', 'Gender'])
 dfBn = pd.read_csv('groupB.txt', header=None, names = ['Height', 'Weight', 'Gender'])
@@ -186,6 +197,13 @@ dfCn = pd.read_csv('groupC.txt', header=None, names = ['Height', 'Weight', 'Gend
 dfAo = normalizeData(dfAn)
 dfBo = normalizeData(dfBn)
 dfCo = normalizeData(dfCn)
+'''Create training sets'''
+dfA75 = partial(dfAo, 0.75)
+dfB75 = partial(dfBo, 0.75)
+dfC75 = partial(dfCo, 0.75)
+dfA25 = partial(dfAo, 0.25)
+dfB25 = partial(dfBo, 0.25)
+dfC25 = partial(dfCo, 0.25)
 
 '''Turn DF objects to lists for speed'''
 dfAn = dfAn.to_dict('index')
@@ -198,46 +216,46 @@ dfC = dfCo.to_dict('index')
 
 
 '''Define Variables'''
-epsilonA = 0.00001
-epsilonB = 100
-epsilonC = 1450
+ε_A = 0.00001
+ε_B = 100
+ε_C = 1450
 ni = 5000
 
 '''Hard Activation Function at 75% training'''
 ht75 = 0.75
-weightsHAFA = HAF(dfA, ht75, epsilonA, 0.5)
-plotIt(dfA, dfAo, weightsHAFA, "HAF Train on 75% of A")
-weightsHAFB = HAF(dfB, ht75, epsilonB, 0.5)
-plotIt(dfB, dfBo, weightsHAFB, "HAF Train on 75% of B")
-weightsHAFC = HAF(dfC, ht75, epsilonC, 0.01)
-plotIt(dfC, dfCo, weightsHAFC, "HAF Train on 75% of C")
+weightsHAFA = HAF(dfA, ht75, ε_A, 0.5)
+plotIt(dfA, dfA75, weightsHAFA, "HAF Train on 75% of A")
+weightsHAFB = HAF(dfB, ht75, ε_B, 0.5)
+plotIt(dfB, dfB75, weightsHAFB, "HAF Train on 75% of B")
+weightsHAFC = HAF(dfC, ht75, ε_C, 0.01)
+plotIt(dfC, dfC75, weightsHAFC, "HAF Train on 75% of C")
 
 '''Soft Activation Function at 75% training'''
 st75 = 0.75
-weightsSAFA = SAF(dfA, st75, epsilonA, 0.5, 5)
-plotIt(dfA, dfAo, weightsSAFA, "SAF Train on 75% of A")
-weightsSAFB = SAF(dfB, st75, epsilonB, 0.5, 5)
-plotIt(dfB, dfBo, weightsSAFB, "SAF Train on 75% of B")
-weightsSAFC = SAF(dfC, st75, epsilonC, 0.5, 5)
-plotIt(dfC, dfCo, weightsSAFC, "SAF Train on 75% of C")
+weightsSAFA = SAF(dfA, st75, ε_A, 0.5, 5)
+plotIt(dfA, dfA75, weightsSAFA, "SAF Train on 75% of A")
+weightsSAFB = SAF(dfB, st75, ε_B, 0.5, 5)
+plotIt(dfB, dfB75, weightsSAFB, "SAF Train on 75% of B")
+weightsSAFC = SAF(dfC, st75, ε_C, 0.5, 5)
+plotIt(dfC, dfC75, weightsSAFC, "SAF Train on 75% of C")
 
 '''Hard Activation Function at 25% training'''
 ht25 = 0.25
-weightsHAFA = HAF(dfA, ht25, epsilonA, 0.5)
-plotIt(dfA, dfAo, weightsHAFA, "HAF Train on 25% of A")
-weightsHAFB = HAF(dfB, ht25, epsilonB, 0.5)
-plotIt(dfB, dfBo, weightsHAFB, "HAF Train on 25% of B")
-weightsHAFC = HAF(dfC, ht25, epsilonC, 0.5)
-plotIt(dfC, dfCo, weightsHAFC, "HAF Train on 25% of C")
+weightsHAFA = HAF(dfA, ht25, ε_A, 0.5)
+plotIt(dfA, dfA25, weightsHAFA, "HAF Train on 25% of A")
+weightsHAFB = HAF(dfB, ht25, ε_B, 0.5)
+plotIt(dfB, dfB25, weightsHAFB, "HAF Train on 25% of B")
+weightsHAFC = HAF(dfC, ht25, ε_C, 0.5)
+plotIt(dfC, dfC25, weightsHAFC, "HAF Train on 25% of C")
 
 '''Soft Activation Function at 25% training'''
 st25 = 0.25
-weightsSAFA = SAF(dfA, st25, epsilonA, 0.5, 5)
-plotIt(dfA, dfAo, weightsSAFA, "SAF Train on 25% of A")
-weightsSAFB = SAF(dfB, st25, epsilonB, 0.5, 5)
-plotIt(dfB, dfBo, weightsSAFB, "SAF Train on 25% of B")
-weightsSAFC = SAF(dfC, st25, epsilonC, 0.5, 5)
-plotIt(dfC, dfCo, weightsSAFC, "SAF Train on 25% of C")
+weightsSAFA = SAF(dfA, st25, ε_A, 0.5, 5)
+plotIt(dfA, dfA25, weightsSAFA, "SAF Train on 25% of A")
+weightsSAFB = SAF(dfB, st25, ε_B, 0.5, 5)
+plotIt(dfB, dfB25, weightsSAFB, "SAF Train on 25% of B")
+weightsSAFC = SAF(dfC, st25, ε_C, 0.5, 5)
+plotIt(dfC, dfC25, weightsSAFC, "SAF Train on 25% of C")
 
 def calculate_inequal(num,ww):
    if (num['Height']*ww[0]+ww[1]*num['Weight']+ww[2])>0:
@@ -272,7 +290,6 @@ def testingFunction(df_train,weights,percnt, stringTitle):
     confusion_matrix=pd.crosstab(actual_matrix,predicted_matrix)
     
     df = normalizeData(df_test)
-    
     plotIt(df_test,df,weights,stringTitle)
     
     print(confusion_matrix)
